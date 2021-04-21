@@ -3,6 +3,7 @@ from typing import Callable
 
 import jax
 import jax.numpy as jnp
+import numpy as np
 from pykeops.numpy import LazyTensor
 from sklearn.base import BaseEstimator
 from sklearn.preprocessing import StandardScaler
