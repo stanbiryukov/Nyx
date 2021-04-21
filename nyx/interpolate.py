@@ -1,5 +1,5 @@
 import functools
-from typing import Callable
+from typing import Callable, Optional
 
 import jax
 import jax.numpy as jnp
@@ -39,6 +39,28 @@ def jcdist(x: jnp.ndarray, y: jnp.ndarray) -> jnp.ndarray:
     return distmat(euclidean_distance, x, y)
 
 
+@jax.jit
+def jax_RBF_kernel(x: jnp.ndarray, y: jnp.ndarray) -> jnp.ndarray:
+    D_ij = jcdist(x, y)
+    return D_ij
+
+
+@jax.jit
+def jax_gaussian_kernel(
+    x: jnp.ndarray, y: jnp.ndarray, epsilon: Optional[float] = 0.1
+) -> jnp.ndarray:
+    D_ij = jcdist(x, y)
+    return jnp.exp(jnp.negative((jnp.power(jnp.divide(D_ij, epsilon), 2))))
+
+
+@jax.jit
+def jax_multiquadric_kernel(
+    x: jnp.ndarray, y: jnp.ndarray, epsilon: Optional[float] = 0.1
+) -> jnp.ndarray:
+    D_ij = jcdist(x, y)
+    return jnp.power(jnp.add(jnp.power(jnp.divide(D_ij, epsilon), 2), 1), 0.5)
+
+
 class jaxNyx(BaseEstimator):
     """
     Jax accelerated scikit-learn friendly RBF interpolation
@@ -48,9 +70,11 @@ class jaxNyx(BaseEstimator):
         self,
         x_scaler=StandardScaler(),
         y_scaler=StandardScaler(),
+        kernel=jax_RBF_kernel,
     ):
         self.x_scaler = x_scaler
         self.y_scaler = y_scaler
+        self.kernel = kernel
 
     def _setfit(self, X, y):
         self.y = jnp.array(
@@ -64,14 +88,14 @@ class jaxNyx(BaseEstimator):
 
     def fit(self, X, y):
         self._setfit(X=X, y=y)
-        # Pairwise distances between observations
-        self.internal_dist = jcdist(self.X, self.X)
+        # Kernel distances between observations
+        self.internal_dist = self.kernel(self.X, self.X)
         # Solve for weights such that distance at the observations is minimized
         self.weights = jax.jit(jnp.linalg.solve)(self.internal_dist, self.y)
 
     def predict(self, X):
-        # Pairwise euclidean distance between inputs and grid
-        dist = jcdist(
+        # Kernel distances between inputs and grid
+        dist = self.kernel(
             jnp.array(self.X.astype(self.X.dtype)), self.x_scaler.transform(X)
         )
         # Matrix multiply the weights for each interpolated point by the distances
