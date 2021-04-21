@@ -28,7 +28,7 @@ def multiquadric_kernel(x, y, epsilon=0.1):
     return ((D_ij / epsilon) ** 2 + 1).sqrt()
 
 
-class keopsNyx(BaseEstimator):
+class Nyx(BaseEstimator):
     """
     KeOps accelerated scikit-learn friendly RBF interpolation
     the ridge regularization parameter, **alpha**, controls the trade-off
