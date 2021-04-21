@@ -75,7 +75,7 @@ class jaxNyx(BaseEstimator):
         # Matrix multiply the weights for each interpolated point by the distances
         zi = jnp.dot(dist.T, self.weights)
         # Cast back to original space
-        zi = self.y_scaler.inverse_transform(zi)
+        zi = self.y_scaler.inverse_transform(zi.reshape(-1, 1)).reshape(-1, 1)
         return zi
 
 
@@ -141,5 +141,5 @@ class keopsNyx(BaseEstimator):
         # Matrix multiply the weights for each interpolated point by the distances
         zi = dist @ self.weights
         # Cast back to original space
-        zi = self.y_scaler.inverse_transform(zi)
+        zi = self.y_scaler.inverse_transform(zi.reshape(-1, 1)).reshape(-1, 1)
         return zi
