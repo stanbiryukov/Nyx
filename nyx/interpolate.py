@@ -53,30 +53,33 @@ class jaxNyx(BaseEstimator):
         self.y_scaler = y_scaler
 
     def _setfit(self, X, y):
-        self.data_dim = X.shape[1]
-        self.y = (
+        self.y = jnp.array(
             self.y_scaler.fit_transform(y.reshape(-1, 1))
             .astype(np.float32)
             .reshape(
                 -1,
             )
         )
-        self.X = self.x_scaler.fit_transform(X).astype(np.float32)
+        self.X = jnp.array(self.x_scaler.fit_transform(X).astype(np.float32))
 
     def fit(self, X, y):
         self._setfit(X=X, y=y)
         # Pairwise distances between observations
         self.internal_dist = jcdist(self.X, self.X)
         # Solve for weights such that distance at the observations is minimized
-        self.weights = jnp.linalg.solve(self.internal_dist, self.y)
+        self.weights = jax.jit(jnp.linalg.solve)(self.internal_dist, self.y)
 
     def predict(self, X):
         # Pairwise euclidean distance between inputs and grid
-        dist = jcdist(self.X.astype(self.X.dtype), self.x_scaler.transform(X))
+        dist = jcdist(
+            jnp.array(self.X.astype(self.X.dtype)), self.x_scaler.transform(X)
+        )
         # Matrix multiply the weights for each interpolated point by the distances
-        zi = jnp.dot(dist.T, self.weights)
+        zi = jax.jit(jnp.dot)(dist.T, self.weights)
         # Cast back to original space
-        zi = self.y_scaler.inverse_transform(zi.reshape(-1, 1)).reshape(-1, 1)
+        zi = self.y_scaler.inverse_transform(zi.reshape(-1, 1)).reshape(
+            -1,
+        )
         return zi
 
 
@@ -142,5 +145,7 @@ class keopsNyx(BaseEstimator):
         # Matrix multiply the weights for each interpolated point by the distances
         zi = dist @ self.weights
         # Cast back to original space
-        zi = self.y_scaler.inverse_transform(zi.reshape(-1, 1)).reshape(-1, 1)
+        zi = self.y_scaler.inverse_transform(zi.reshape(-1, 1)).reshape(
+            -1,
+        )
         return zi
