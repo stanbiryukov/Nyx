@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 with open('requirements.txt') as f:
     requirements = f.read().splitlines()
 
-with open("Nyx/version.py") as f:
+with open("nyx/version.py") as f:
     exec(f.read())
 
 extra_setuptools_args = dict(
