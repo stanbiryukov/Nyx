@@ -12,7 +12,8 @@ from nyx.jax.interpolate import Nyx as jNyx
 
 import numpy as np
 
-## Create `n` random points on a 500 x 500 grid
+dtype = np.float32
+# Create `n` random points on a 500 x 500 grid
 rng = np.random.default_rng(3934)
 
 n = 1000
@@ -23,7 +24,7 @@ y = rng.uniform(low=-90, high=90, size=(n,)).astype(dtype) # latitude
 z = rng.random(size=(n)).astype(dtype)
 xy = np.column_stack([x, y])
 
-## Create corresponding grid
+# Create corresponding grid
 xi = np.linspace(x.min(), x.max(), nx).astype(dtype)
 yi = np.linspace(y.min(), y.max(), ny).astype(dtype)
 xi, yi = np.meshgrid(xi, yi)
