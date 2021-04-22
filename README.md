@@ -45,3 +45,5 @@ krbf = keoNyx(x_scaler=cartt)
 krbf.fit(xy, z)
 hat = krbf.predict(X = xygrid)
 ```
+## google colab notebook demo:
+https://colab.research.google.com/drive/1aOK3094LEiVCAbcVnBGR6Y1FxKrMrB_6?usp=sharing
