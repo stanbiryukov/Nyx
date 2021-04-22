@@ -1,7 +1,7 @@
 # Nyx
 # Fast and scalable RBF interpolation
 ##  Jax and PyKeOps RBF interpolation methods are wrapped in a simple scikit-learn API
-## This package aims to replace `scipy.interpolate.Rbf`
+## This package aims to supplement `scipy.interpolate.Rbf` with more scalable numeric approaches.
 # Examples
 ## Jax flavor
 ```python
