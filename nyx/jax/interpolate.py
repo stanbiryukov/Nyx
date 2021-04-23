@@ -1,7 +1,6 @@
 import functools
 from typing import Callable, Optional
 
-import numpy as np
 from sklearn.base import BaseEstimator
 from sklearn.preprocessing import StandardScaler
 
@@ -101,7 +100,7 @@ class Nyx(BaseEstimator):
         # Kernel distances between inputs and grid
         dist = self.kernel(
             jnp.array(self.X.astype(self.X.dtype)),
-            self.x_scaler.transform(X),
+            self.x_scaler.transform(X).astype(self.X.dtype),
             epsilon=self.epsilon,
         )
         # Matrix multiply the weights for each interpolated point by the distances
