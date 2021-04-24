@@ -22,7 +22,7 @@ setup(
     license = 'MIT',
     description='Nyx: Fast and scalable RBF interpolation',
     long_description= "Nyx is a modern approach to scipy.interpolate.Rbf, enabling efficient computations with Jax and scalable operations with PyKeops",
-    keywords = ['RBF', 'interpolate', 'interpolation', 'keops', 'jax', 'pykeops', 'sklearn', 'scikit-learn'],
+    keywords = ['RBF', 'interpolate', 'interpolation', 'keops', 'jax', 'pykeops', 'torch', 'pytorch', 'cuda', 'spatial', 'geospatial', 'linear-algebra', 'sklearn', 'scikit-learn'],
     classifiers = [
         "Programming Language :: Python :: 3.7",
         "Operating System :: OS Independent",
