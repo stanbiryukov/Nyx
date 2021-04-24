@@ -35,7 +35,7 @@ class Nyx(BaseEstimator):
         self,
         x_scaler=StandardScaler(),
         y_scaler=StandardScaler(),
-        kernel=gaussian_kernel,
+        kernel=linear_kernel,
         alpha=1e-10,
         epsilon=None,
     ):
