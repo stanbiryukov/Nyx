@@ -4,3 +4,4 @@ numpy
 pykeops
 scikit-learn
 scipy
+torch
